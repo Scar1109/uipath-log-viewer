@@ -314,19 +314,8 @@ const LogViewer = ({ onThemeChange, isDarkMode }) => {
 
             {/* Find Toolbar */}
             {showFind && (
-                <div style={{
-                    position: 'absolute',
-                    bottom: '32px',
-                    right: '32px',
-                    zIndex: 2000,
+                <div className="find-toolbar" style={{
                     background: isDarkMode ? 'rgba(31, 31, 31, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
                     border: isDarkMode ? '1px solid #444' : '1px solid #eee'
                 }}>
                     <Input

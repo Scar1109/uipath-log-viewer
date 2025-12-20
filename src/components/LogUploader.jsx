@@ -37,7 +37,7 @@ const LogUploader = ({ onFileUpload, isDarkMode }) => {
     };
 
     return (
-        <div style={{ padding: '24px', textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', width: '70%', minWidth: '800px', margin: '0 auto' }}>
+        <div className="uploader-container" style={{ padding: '24px', textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1 }}>
                 <Title level={2} style={{ color: isDarkMode ? 'white' : 'inherit' }}>Upload Log File</Title>
 

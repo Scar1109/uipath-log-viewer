@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Layout, Typography, ConfigProvider, theme, Space, Switch, App as AntApp } from 'antd';
 import LogViewer from './components/LogViewer';
 import { RobotOutlined, BulbFilled, BulbOutlined } from '@ant-design/icons';
-import logo from './assets/logo.webp';
 import './App.css';
 
 const { Header, Content, Footer } = Layout;
@@ -37,22 +36,21 @@ function App() {
       <AntApp>
         <Layout style={{ minHeight: '100vh', background: isDarkMode ? '#141414' : '#f0f2f5' }}>
           {/* Header, Content, Footer content remains same, just wrapped */}
-          <Header style={{
+          <Header className="app-header" style={{
             position: 'relative', // Enable absolute positioning for children
             display: 'flex',
             alignItems: 'center',
-            padding: '0 24px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
             zIndex: 10,
             justifyContent: 'space-between'
           }}>
             {/* Left-aligned Logo */}
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="UiPath Logo" style={{ height: '48px' }} />
+              <RobotOutlined style={{ fontSize: '32px', color: isDarkMode ? '#177ddc' : '#fff', marginRight: '8px' }} />
             </div>
 
             {/* Absolute Centered Title */}
-            <div style={{
+            <div className="header-title" style={{
               position: 'absolute',
               left: '50%',
               transform: 'translateX(-50%)',
