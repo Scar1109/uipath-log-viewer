@@ -1,0 +1,121 @@
+@import 'antd/dist/reset.css';
+
+:root {
+  --primary-color: #0070c0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f0f2f5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+  /* App handles scrolling */
+}
+
+/* Custom Scrollbar for Webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Custom row colors for Antd Table */
+.log-row-warn {
+  background-color: #fffbe6 !important;
+}
+
+.log-row-error {
+  background-color: #fff1f0 !important;
+}
+
+.log-row-fatal {
+  background-color: #820014 !important;
+  /* Darker red */
+  color: white !important;
+  font-weight: bold;
+}
+
+.log-row-info {
+  background-color: #e6f7ff !important;
+  /* Light blue bg for visibility */
+  color: #0050b3 !important;
+}
+
+/* Virtual Table Styles */
+.virtual-table .ant-table-container:before,
+.virtual-table .ant-table-container:after {
+  display: none;
+}
+
+/* Virtual Table Cell Overrides */
+.virtual-table-cell {
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 16px !important;
+  /* Standard Table Padding */
+  line-height: 54px;
+  /* Center text vertically based on row height */
+  display: block;
+  /* Robust alignment */
+  text-align: left;
+  /* Explicit left align */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.virtual-table-cell-even {
+  background-color: #fafafa;
+}
+
+/* Dark Mode Overrides */
+/* Use specific class that will be toggled */
+.virtual-table-dark .virtual-table-cell {
+  background-color: #141414;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid #303030;
+}
+
+.virtual-table-dark .virtual-table-cell-even {
+  background-color: #1f1f1f;
+}
+
+.virtual-table-dark .virtual-table-cell:hover {
+  background-color: #303030;
+  /* Hover effect */
+}
+
+/* Specific Row Colors in Dark Mode */
+.virtual-table-dark .log-row-info {
+  background-color: #111d2c !important;
+  color: #177ddc !important;
+}
+
+.virtual-table-dark .log-row-warn {
+  background-color: #443111 !important;
+  /* Proper dark orange/brown */
+  color: #d48806 !important;
+}
+
+.virtual-table-dark .log-row-error {
+  background-color: #5c0011 !important;
+  color: #ff7875 !important;
+}
+
+.virtual-table-dark .log-row-fatal {
+  background-color: #a8071a !important;
+  color: #fff !important;
+}
