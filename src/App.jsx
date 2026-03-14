@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Layout, Typography, ConfigProvider, theme, Space, Switch, App as AntApp } from 'antd';
 import LogViewer from './components/LogViewer';
-import { RobotOutlined, BulbFilled, BulbOutlined } from '@ant-design/icons';
+import { RobotOutlined, BulbFilled, BulbOutlined, GithubOutlined, InstagramOutlined, YoutubeOutlined, LinkedinOutlined } from '@ant-design/icons';
 import './App.css';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const toggleTheme = (checked) => setIsDarkMode(checked);
 
@@ -22,82 +22,91 @@ function App() {
       theme={{
         algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#0070c0', // UiPath Blue-ish
+          colorPrimary: '#000000',
           borderRadius: 6,
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "'Inter', -apple-system, sans-serif",
+          colorBgContainer: isDarkMode ? '#000000' : '#ffffff',
+          colorBgLayout: isDarkMode ? '#000000' : '#ffffff',
+          colorBorderSecondary: isDarkMode ? '#333333' : '#eaeaea',
         },
         components: {
           Layout: {
-            headerBg: isDarkMode ? '#1f1f1f' : '#002846', // Darker blue header
+            headerBg: isDarkMode ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)',
+            headerPadding: '0 24px',
+            headerHeight: 64,
+          },
+          Button: {
+            borderRadius: 6,
+            controlHeight: 36,
+            fontWeight: 500,
+          },
+          Input: {
+            borderRadius: 6,
+            controlHeight: 36,
+          },
+          Select: {
+            borderRadius: 6,
+            controlHeight: 36,
           }
         }
       }}
     >
       <AntApp>
-        <Layout style={{ minHeight: '100vh', background: isDarkMode ? '#141414' : '#f0f2f5' }}>
-          {/* Header, Content, Footer content remains same, just wrapped */}
+        <Layout style={{ minHeight: '100vh', background: isDarkMode ? '#000000' : '#ffffff' }}>
           <Header className="app-header" style={{
-            position: 'relative', // Enable absolute positioning for children
+            position: 'sticky',
+            top: 0,
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            zIndex: 10,
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            zIndex: 1000,
+            background: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderBottom: `1px solid ${isDarkMode ? '#333' : '#eaeaea'}`,
+            padding: '0 24px'
           }}>
-            {/* Left-aligned Logo */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <RobotOutlined style={{ fontSize: '32px', color: isDarkMode ? '#177ddc' : '#fff', marginRight: '8px' }} />
-            </div>
-
-            {/* Absolute Centered Title */}
-            <div className="header-title" style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              textAlign: 'center',
-              cursor: 'pointer'
-            }} onClick={handleReset}>
-              <Title level={4} style={{
-                color: 'white',
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={handleReset}>
+              <RobotOutlined style={{ fontSize: '24px', color: isDarkMode ? '#fff' : '#000' }} />
+              <Title level={5} style={{
                 margin: 0,
                 fontWeight: 600,
-                fontFamily: "'Product Sans', 'Inter', sans-serif"
+                letterSpacing: '-0.02em',
+                color: isDarkMode ? '#fff' : '#000',
+                fontFamily: "'Inter', sans-serif"
               }}>
-                UiPath Log Viewer
+                Log Viewer
               </Title>
             </div>
 
-            {/* Right-aligned Switch */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Switch
-                checkedChildren={<BulbFilled />}
-                unCheckedChildren={<BulbOutlined />}
-                checked={isDarkMode}
-                onChange={toggleTheme}
-              />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <Space>
+                 <Switch
+                  checkedChildren={<BulbFilled style={{ fontSize: '12px' }} />}
+                  unCheckedChildren={<BulbOutlined style={{ fontSize: '12px' }} />}
+                  checked={isDarkMode}
+                  onChange={toggleTheme}
+                  style={{ background: isDarkMode ? '#333' : '#eaeaea' }}
+                />
+              </Space>
             </div>
           </Header>
 
           <Content style={{
-            padding: '24px',
+            padding: '16px 24px',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            width: '100%',
+            minHeight: 'calc(100vh - 64px - 60px)',
             display: 'flex',
-            flexDirection: 'column',
-            height: 'calc(100vh - 64px - 40px)', // adjust for footer
-            width: '100%', // Ensure full width
-            maxWidth: '100%',
-            overflow: 'hidden'
+            flexDirection: 'column'
           }}>
             <div
               style={{
                 flex: 1,
                 width: '100%',
-                overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                background: isDarkMode ? '#1f1f1f' : '#fff',
-                borderRadius: '8px',
-                boxShadow: isDarkMode ? '0 1px 2px rgba(255,255,255,0.05)' : '0 1px 2px rgba(0,0,0,0.05)',
-                padding: '16px'
               }}
             >
               <LogViewer key={resetKey} isDarkMode={isDarkMode} onThemeChange={setIsDarkMode} />
@@ -105,12 +114,52 @@ function App() {
           </Content>
 
           <Footer style={{
-            textAlign: 'center',
-            padding: '10px 50px',
-            background: 'transparent',
-            color: isDarkMode ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)'
+            padding: '24px 40px',
+            background: isDarkMode ? '#000000' : '#ffffff',
+            borderTop: `1px solid ${isDarkMode ? '#333' : '#eaeaea'}`,
           }}>
-            <Text type="secondary" style={{ fontSize: '12px' }}>UiPath Log Viewer ©2025</Text>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              width: '100%',
+              maxWidth: '1400px',
+              margin: '0 auto',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}>
+              {/* Left Side: Credits */}
+              <div style={{ flex: '1 1 200px', textAlign: 'left' }}>
+                <Text style={{ fontSize: '12px', color: isDarkMode ? '#555' : '#999' }}>
+                  Made by <Text strong style={{ color: isDarkMode ? '#ccc' : '#333' }}>Kaveen Dewapura</Text>
+                </Text>
+              </div>
+
+              {/* Middle: Title & Year */}
+              <div style={{ flex: '1 1 300px', textAlign: 'center' }}>
+                <Text style={{ fontSize: '13px', color: isDarkMode ? '#888' : '#666', fontWeight: 500 }}>
+                  UiPath Log Viewer <span style={{ opacity: 0.5 }}>/</span> 2026
+                </Text>
+              </div>
+              
+              {/* Right Side: Social Icons */}
+              <div style={{ flex: '1 1 200px', textAlign: 'right' }}>
+                <Space size="middle">
+                  <a href="https://github.com/Scar1109" target="_blank" rel="noopener noreferrer" style={{ color: isDarkMode ? '#888' : '#666' }}>
+                    <GithubOutlined style={{ fontSize: '16px' }} className="footer-link" />
+                  </a>
+                  <a href="https://www.instagram.com/kavee_dineth/" target="_blank" rel="noopener noreferrer" style={{ color: isDarkMode ? '#888' : '#666' }}>
+                    <InstagramOutlined style={{ fontSize: '16px' }} className="footer-link" />
+                  </a>
+                  <a href="https://www.linkedin.com/in/kaveendinethma/" target="_blank" rel="noopener noreferrer" style={{ color: isDarkMode ? '#888' : '#666' }}>
+                    <LinkedinOutlined style={{ fontSize: '16px' }} className="footer-link" />
+                  </a>
+                  <a href="https://www.youtube.com/@kaveendinethma1109" target="_blank" rel="noopener noreferrer" style={{ color: isDarkMode ? '#888' : '#666' }}>
+                    <YoutubeOutlined style={{ fontSize: '16px' }} className="footer-link" />
+                  </a>
+                </Space>
+              </div>
+            </div>
           </Footer>
         </Layout>
       </AntApp>

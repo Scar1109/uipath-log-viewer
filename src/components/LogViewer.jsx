@@ -314,24 +314,25 @@ const LogViewer = ({ onThemeChange, isDarkMode }) => {
 
             {/* Find Toolbar */}
             {showFind && (
-                <div className="find-toolbar" style={{
-                    background: isDarkMode ? 'rgba(31, 31, 31, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                    border: isDarkMode ? '1px solid #444' : '1px solid #eee'
-                }}>
+                <div className="find-toolbar">
                     <Input
                         ref={findInputRef}
-                        placeholder="Find..."
+                        placeholder="Find in logs..."
                         value={findQuery}
+                        variant="borderless"
                         onChange={(e) => handleFind(e.target.value)}
                         onPressEnter={() => navigateFind('next')}
-                        style={{ width: 300 }}
+                        style={{ width: 240, fontSize: '13px' }}
                     />
-                    <Text type="secondary" style={{ fontSize: '12px', minWidth: '60px', color: isDarkMode ? '#ccc' : undefined }}>
-                        {findIndices.length > 0 ? `${currentFindIndex + 1} of ${findIndices.length}` : '0 of 0'}
+                    <div style={{ height: '20px', width: '1px', background: isDarkMode ? '#333' : '#eee' }}></div>
+                    <Text type="secondary" style={{ fontSize: '12px', minWidth: '60px', color: isDarkMode ? '#888' : '#666', fontWeight: 500 }}>
+                        {findIndices.length > 0 ? `${currentFindIndex + 1} / ${findIndices.length}` : '0 / 0'}
                     </Text>
-                    <Button size="small" icon={<ArrowUpOutlined />} onClick={() => navigateFind('prev')} disabled={findIndices.length === 0} />
-                    <Button size="small" icon={<ArrowDownOutlined />} onClick={() => navigateFind('next')} disabled={findIndices.length === 0} />
-                    <Button size="small" icon={<CloseOutlined />} onClick={closeFind} type="text" />
+                    <Space size={4}>
+                        <Button size="small" type="text" icon={<ArrowUpOutlined style={{ fontSize: '12px' }} />} onClick={() => navigateFind('prev')} disabled={findIndices.length === 0} />
+                        <Button size="small" type="text" icon={<ArrowDownOutlined style={{ fontSize: '12px' }} />} onClick={() => navigateFind('next')} disabled={findIndices.length === 0} />
+                        <Button size="small" type="text" icon={<CloseOutlined style={{ fontSize: '12px' }} />} onClick={closeFind} />
+                    </Space>
                 </div>
             )}
 
@@ -344,55 +345,62 @@ const LogViewer = ({ onThemeChange, isDarkMode }) => {
                     right: 0,
                     bottom: 0,
                     zIndex: 2000,
-                    background: isDarkMode ? '#141414' : '#f0f2f5',
+                    background: isDarkMode ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)',
+                    backdropFilter: 'blur(8px)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '16px'
                 }}>
-                    <Spin size="large" />
-                    <Typography.Text style={{ color: isDarkMode ? 'white' : 'black' }}>
-                        {loading ? "Parsing Log File..." : "Applying Filters..."}
+                    <Spin size="medium" />
+                    <Typography.Text style={{ color: isDarkMode ? '#fff' : '#000', fontWeight: 500, fontSize: '14px' }}>
+                        {loading ? "Parsing log file..." : "Applying filters..."}
                     </Typography.Text>
                 </div>
             )}
 
-            <Card bodyStyle={{ padding: '16px' }} bordered={false} style={{ boxShadow: 'none', background: 'transparent' }}>
-                <Row gutter={[16, 16]} align="middle">
+            <div style={{ 
+                padding: '16px 0', 
+                borderBottom: `1px solid ${isDarkMode ? '#333' : '#eaeaea'}`,
+                marginBottom: '16px'
+            }}>
+                <Row gutter={[12, 12]} align="middle">
                     {/* Search & Level */}
-                    <Col xs={24} sm={12} md={6}>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <Input
-                                placeholder="Search..."
-                                prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-                                onChange={e => setSearchText(e.target.value)}
-                                allowClear
-                            />
-                        </div>
+                    <Col xs={24} md={6}>
+                        <Input
+                            placeholder="Search in records..."
+                            prefix={<SearchOutlined style={{ color: isDarkMode ? '#666' : '#999' }} />}
+                            onChange={e => setSearchText(e.target.value)}
+                            allowClear
+                            style={{ 
+                                background: isDarkMode ? '#111' : '#fff',
+                                borderColor: isDarkMode ? '#333' : '#eaeaea'
+                            }}
+                        />
                     </Col>
-                    <Col xs={24} sm={12} md={4}>
+                    <Col xs={12} md={3}>
                         <Select
                             style={{ width: '100%' }}
                             value={levelFilter}
                             onChange={setLevelFilter}
+                            popupClassName={isDarkMode ? 'dark-select' : ''}
                         >
                             <Option value="ALL">All Levels</Option>
                             <Option value="info">Info</Option>
                             <Option value="warn">Warn</Option>
                             <Option value="error">Error</Option>
                             <Option value="fatal">Fatal</Option>
-                            <Option value="trace">Trace</Option>
                         </Select>
                     </Col>
 
                     {/* Column Select */}
-                    <Col xs={24} sm={24} md={6}>
+                    <Col xs={12} md={5}>
                         <Select
                             mode="multiple"
                             allowClear
                             style={{ width: '100%' }}
-                            placeholder="Select Columns"
+                            placeholder="Columns"
                             value={visibleColumns}
                             onChange={setVisibleColumns}
                             maxTagCount="responsive"
@@ -403,68 +411,68 @@ const LogViewer = ({ onThemeChange, isDarkMode }) => {
                         </Select>
                     </Col>
 
-                    {/* Actions */}
-                    <Col xs={24} sm={24} md={8} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Space wrap>
-                            <Tooltip title="Toggle Colored Rows">
-                                <Switch
-                                    checkedChildren={<BgColorsOutlined />}
-                                    unCheckedChildren={<BgColorsOutlined />}
-                                    checked={showColoredRows}
-                                    onChange={setShowColoredRows}
+                    <Col xs={24} md={10} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Space size={8}>
+                            <Tooltip title="Colored Rows">
+                                <Button 
+                                    type={showColoredRows ? "primary" : "default"}
+                                    icon={<BgColorsOutlined />} 
+                                    onClick={() => setShowColoredRows(!showColoredRows)}
+                                    className={!showColoredRows && isDarkMode ? 'dark-btn-ghost' : ''}
                                 />
                             </Tooltip>
-                            <Tooltip title="Toggle Readable Timestamp">
-                                <Switch
-                                    checkedChildren={<ClockCircleOutlined />}
-                                    unCheckedChildren={<ClockCircleOutlined />}
-                                    checked={showReadableTimestamp}
-                                    onChange={setShowReadableTimestamp}
+                            <Tooltip title="Human Readable Time">
+                                <Button 
+                                    type={showReadableTimestamp ? "primary" : "default"}
+                                    icon={<ClockCircleOutlined />} 
+                                    onClick={() => setShowReadableTimestamp(!showReadableTimestamp)}
+                                    className={!showReadableTimestamp && isDarkMode ? 'dark-btn-ghost' : ''}
                                 />
                             </Tooltip>
-                            <Tooltip title="View Dashboard">
-                                <Button icon={<BarChartOutlined />} onClick={() => setIsDashboardOpen(true)} />
-                            </Tooltip>
-                            <Tooltip title="Export to Excel">
-                                <Button icon={<DownloadOutlined />} onClick={handleExport} />
-                            </Tooltip>
-                            <Tooltip title="Clear Logs">
-                                <Button icon={<DeleteOutlined />} onClick={clearLogs} danger />
-                            </Tooltip>
+                            <div style={{ width: '1px', height: '20px', background: isDarkMode ? '#333' : '#eee', margin: '0 4px' }}></div>
+                            <Button icon={<BarChartOutlined />} onClick={() => setIsDashboardOpen(true)}>Analytics</Button>
+                            <Button icon={<DownloadOutlined />} onClick={handleExport}>Export</Button>
+                            <Button icon={<DeleteOutlined />} onClick={clearLogs} danger type="text">Clear</Button>
                         </Space>
                     </Col>
 
-                    {/* Filters */}
-                    <Col xs={24} md={6}>
+                    {/* Secondary Filter Row */}
+                    <Col xs={24} md={8}>
                         <RangePicker
                             showTime
                             onChange={setDateRange}
-                            style={{ width: '100%' }}
+                            style={{ 
+                                width: '100%',
+                                background: isDarkMode ? '#111' : '#fff',
+                                borderColor: isDarkMode ? '#333' : '#eaeaea'
+                            }}
                             disabledDate={dateConstraints}
                         />
                     </Col>
-                    <Col xs={24} md={3}>
-                        <Button
-                            type={showFind ? "primary" : "default"}
-                            icon={<SearchOutlined />}
-                            onClick={(e) => {
-                                e.currentTarget.blur();
-                                setShowFind(prev => !prev);
-                            }}
-                            block
-                        >
-                            Find
-                        </Button>
-                    </Col>
-                    <Col xs={24} md={15} style={{ textAlign: 'right' }}>
+                    <Col xs={24} md={16} style={{ textAlign: 'right' }}>
                         <Space>
-                            <Tag color="blue">{logCount} rows found</Tag>
+                            <Tag bordered={false} style={{ 
+                                borderRadius: '12px', 
+                                padding: '0 12px', 
+                                background: isDarkMode ? '#111' : '#f5f5f5',
+                                color: isDarkMode ? '#888' : '#666',
+                                fontWeight: 500,
+                                fontSize: '12px'
+                            }}>
+                                {logCount.toLocaleString()} results found
+                            </Tag>
                         </Space>
                     </Col>
                 </Row>
-            </Card>
+            </div>
 
-            <div style={{ flex: 1, overflow: 'hidden', borderRadius: '8px', border: isDarkMode ? '1px solid #303030' : '1px solid #f0f0f0' }}>
+            <div style={{ 
+                flex: 1, 
+                overflow: 'hidden', 
+                borderRadius: '8px', 
+                border: isDarkMode ? '1px solid #333' : '1px solid #eaeaea',
+                background: isDarkMode ? '#000' : '#fff'
+            }}>
                 {columns.length > 0 ? (
                     <LogTable
                         ref={tableRef}

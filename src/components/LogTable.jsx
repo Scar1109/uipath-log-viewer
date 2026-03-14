@@ -186,7 +186,7 @@ const VirtualTable = React.forwardRef((props, ref) => {
                     let className = 'virtual-table-cell';
 
                     if (!record) {
-                        content = <span style={{ color: '#ccc', fontStyle: 'italic' }}>Loading...</span>;
+                        content = <span style={{ color: isDarkMode ? '#333' : '#ccc', fontStyle: 'italic', fontSize: '11px' }}>Loading...</span>;
                     } else {
                         const column = mergedColumns[columnIndex];
                         let text = record[column.dataIndex];
@@ -201,7 +201,7 @@ const VirtualTable = React.forwardRef((props, ref) => {
                                     }
                                     const date = new Date(dateStr);
                                     if (!isNaN(date.getTime())) {
-                                        text = date.toLocaleString();
+                                        text = date.toLocaleString('en-US', { hour12: false });
                                     }
                                 } catch (e) {
                                     // ignore
@@ -211,18 +211,39 @@ const VirtualTable = React.forwardRef((props, ref) => {
 
                         content = text;
                         if (column.dataIndex === 'level') {
-                            content = <Tag color={getLevelColor(text)} style={{ fontSize: '13px', lineHeight: '20px', marginRight: 0 }}>{text}</Tag>;
-                        } else if (column.dataIndex === 'message' && highlightText && text && typeof text === 'string') {
-                            // Simple highlighting
-                            const parts = text.split(new RegExp(`(${highlightText})`, 'gi'));
-                            content = parts.map((part, i) =>
-                                part.toLowerCase() === highlightText.toLowerCase() ? <mark key={i} style={{ padding: 0, backgroundColor: '#ffe58f' }}>{part}</mark> : part
+                            content = (
+                                <Tag 
+                                    bordered={false}
+                                    style={{ 
+                                        fontSize: '11px', 
+                                        lineHeight: '18px', 
+                                        marginRight: 0,
+                                        fontWeight: 600,
+                                        textTransform: 'uppercase',
+                                        borderRadius: '4px',
+                                        background: isDarkMode ? undefined : undefined, // Handled by getLevelColor or soft classes
+                                    }}
+                                    color={getLevelColor(text)}
+                                >
+                                    {text}
+                                </Tag>
                             );
-                        } else if (column.render) {
-                            // Note: column.render usually takes (text, record, index)
-                            // But here we might not have a full 'render' support if we define columns dynamically without render functions in LogViewer.
-                            // The current implementation in LogViewer only generates simple columns.
-                            content = text;
+                        } else if (column.dataIndex === 'message' || column.dataIndex === 'exception' || column.dataIndex === 'rawTimestamp') {
+                             // Apply monospaced font for data clarity
+                             const isMessageOrException = column.dataIndex === 'message' || column.dataIndex === 'exception';
+                             
+                             if (isMessageOrException && highlightText && text && typeof text === 'string') {
+                                const parts = text.split(new RegExp(`(${highlightText})`, 'gi'));
+                                content = (
+                                    <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: '12px' }}>
+                                        {parts.map((part, i) =>
+                                            part.toLowerCase() === highlightText.toLowerCase() ? <mark key={i} style={{ padding: '2px 0', backgroundColor: '#fbbf24', color: '#000' }}>{part}</mark> : part
+                                        )}
+                                    </span>
+                                );
+                             } else {
+                                content = <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: '12px' }}>{text}</span>;
+                             }
                         }
 
                         const l = (record.level || '').toLowerCase();
@@ -241,15 +262,22 @@ const VirtualTable = React.forwardRef((props, ref) => {
                             className={className}
                             style={{
                                 ...style,
-                                padding: '8px',
-                                borderBottom: '1px solid #f0f0f0',
+                                padding: '0 16px',
+                                borderBottom: `1px solid ${isDarkMode ? '#111' : '#f5f5f5'}`,
                                 overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                                textOverflow: 'ellipsis'
+                                display: 'flex',
+                                alignItems: 'center'
                             }}
                             title={record && typeof record[mergedColumns[columnIndex]?.dataIndex] === 'string' ? record[mergedColumns[columnIndex].dataIndex] : ''}
                         >
-                            {content}
+                            <div style={{ 
+                                width: '100%', 
+                                overflow: 'hidden', 
+                                textOverflow: 'ellipsis', 
+                                whiteSpace: 'nowrap' 
+                            }}>
+                                {content}
+                            </div>
                         </div>
                     );
                 }}
