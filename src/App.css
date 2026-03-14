@@ -1,22 +1,39 @@
-@import 'antd/dist/reset.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
 
 :root {
-  --primary-color: #0070c0;
+  --primary-color: #000000;
+  --bg-color: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --border-color: #eaeaea;
+  --hover-color: #fafafa;
+  --dark-bg: #000000;
+  --dark-border: #333333;
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #888888;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #f0f2f5;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  overflow: hidden;
-  /* App handles scrolling */
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Custom Scrollbar for Webkit */
+/* Base transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -24,34 +41,40 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
+  background: #eaeaea;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: #ccc;
 }
 
-/* Custom row colors for Antd Table */
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* Log Level Row Colors - Vercel Soft Palette */
 .log-row-warn {
-  background-color: #fffbe6 !important;
+  background-color: #fffaf0 !important;
 }
 
 .log-row-error {
-  background-color: #fff1f0 !important;
+  background-color: #fff5f5 !important;
 }
 
 .log-row-fatal {
-  background-color: #820014 !important;
-  /* Darker red */
-  color: white !important;
-  font-weight: bold;
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+  font-weight: 500;
 }
 
 .log-row-info {
-  background-color: #e6f7ff !important;
-  /* Light blue bg for visibility */
-  color: #0050b3 !important;
+  background-color: #f0f9ff !important;
+  color: #075985 !important;
 }
 
 /* Virtual Table Styles */
@@ -67,57 +90,51 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   padding: 0 16px !important;
-  /* Standard Table Padding */
-  line-height: 54px;
-  /* Center text vertically based on row height */
+  line-height: 48px;
+  /* Slightly tighter */
   display: block;
-  /* Robust alignment */
   text-align: left;
-  /* Explicit left align */
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
 }
 
 .virtual-table-cell-even {
   background-color: #fafafa;
 }
 
-/* Dark Mode Overrides */
-/* Use specific class that will be toggled */
 .virtual-table-dark .virtual-table-cell {
-  background-color: #141414;
-  color: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid #303030;
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
+  border-bottom: 1px solid var(--dark-border);
 }
 
 .virtual-table-dark .virtual-table-cell-even {
-  background-color: #1f1f1f;
+  background-color: #0a0a0a;
 }
 
 .virtual-table-dark .virtual-table-cell:hover {
-  background-color: #303030;
-  /* Hover effect */
+  background-color: #111;
 }
 
-/* Specific Row Colors in Dark Mode */
+/* Specific Row Colors in Dark Mode - Soft Variants */
 .virtual-table-dark .log-row-info {
-  background-color: #111d2c !important;
-  color: #177ddc !important;
+  background-color: #082f49 !important;
+  color: #7dd3fc !important;
 }
 
 .virtual-table-dark .log-row-warn {
-  background-color: #443111 !important;
-  /* Proper dark orange/brown */
-  color: #d48806 !important;
+  background-color: #451a03 !important;
+  color: #fdba74 !important;
 }
 
 .virtual-table-dark .log-row-error {
-  background-color: #5c0011 !important;
-  color: #ff7875 !important;
+  background-color: #450a0a !important;
+  color: #fca5a5 !important;
 }
 
 .virtual-table-dark .log-row-fatal {
-  background-color: #a8071a !important;
-  color: #fff !important;
+  background-color: #7f1d1d !important;
+  color: #fecaca !important;
 }
 
 /* Responsive Utilities */
@@ -136,7 +153,7 @@ body {
   }
 }
 
-/* Find Toolbar */
+/* Find Toolbar - Vercel Style Floating Card */
 .find-toolbar {
   position: absolute;
   bottom: 32px;
@@ -145,20 +162,19 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  backdrop-filter: blur(10px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-@media (max-width: 600px) {
-  .find-toolbar {
-    bottom: 16px;
-    right: 16px;
-    left: 16px; /* Center it */
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.dark .find-toolbar {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: var(--dark-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Header Adjustments */
@@ -170,8 +186,18 @@ body {
   .app-header {
     padding: 0 12px !important;
   }
-  
+
   .header-title {
-    display: none !important; /* Hide title on very small screens to avoid overlap */
+    display: none !important;
+    /* Hide title on very small screens to avoid overlap */
   }
+}
+
+.footer-link {
+  transition: all 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--text-primary) !important;
+  transform: translateY(-2px);
 }
